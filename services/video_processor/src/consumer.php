@@ -3,7 +3,7 @@
 $ampq_connection = new AMQPConnection([
 	'host' => 'rabbit',
 	'port' => '5672',
-	'login' => 'guest',
+	'auth' => 'guest',
 	'password' => 'guest',
 ]);
 try {

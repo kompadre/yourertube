@@ -4,6 +4,11 @@ localhost {
     file_server browse
     php_fastcgi /user/* user_dashboard:9000 {
         root /app
+        index index.php
+    }
+    php_fastcgi /auth/* auth:9000 {
+        root /app
+        index index.php
     }
 }
 

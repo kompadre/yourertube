@@ -10,15 +10,22 @@ services:
     build:
       context: ./services/user_dashboard
     volumes:
-      - "./services/user_dashboard/src/:/app/"
-      - "./shared/:/app/shared/"
-      - "upload_bucket:/files/uploaded"
-      - "processed_bucket:/files/processed"
+      - "./services/user_dashboard/src/:/app/user"
+      - "./common/:/app/common/"
+      - "./volumes/media:/media/"
     environment:
       AMQP_HOST: "${AMQP_HOST}"
       AMQP_PORT: "${AMQP_PORT}"
       AMQP_USER: "${AMQP_USER}"
       AMQP_PASS: "${AMQP_PASS}"
+  auth:
+    build:
+      context: ./services/auth
+    depends_on:
+      - caddy
+    volumes:
+      - "./services/auth/src/:/app/auth"
+      - "./common/:/app/common/"
   video_processor:
     depends_on:
       rabbit:
@@ -27,9 +34,8 @@ services:
       context: ./services/video_processor
     volumes:
       - "./services/video_processor/src/:/app/" 
-      - "./shared/:/app/shared/"
-      - "upload_bucket:/files/uploaded"
-      - "processed_bucket:/files/processed" 
+      - "./common/:/app/common/"
+      - "./volumes/media:/media/"
   caddy:
     image: caddy
     volumes:
@@ -48,9 +54,3 @@ services:
       interval: 5s
       timeout: 2s
       retries: 3
-volumes:
-  upload_bucket:
-    driver: 
-  processed_bucket:
-      
-    
