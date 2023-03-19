@@ -1,0 +1,9 @@
+localhost {
+    root * /srv
+    templates
+    file_server browse
+    php_fastcgi /user/* user_dashboard:9000 {
+        root /app
+    }
+}
+

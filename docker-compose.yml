@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  user_dashboard:
+    depends_on:
+      rabbit:
+        condition: service_healthy
+      caddy:
+        condition: service_started
+    build:
+      context: ./services/user_dashboard
+    volumes:
+      - "./services/user_dashboard/src/:/app/"
+      - "./shared/:/app/shared/"
+      - "upload_bucket:/files/uploaded"
+      - "processed_bucket:/files/processed"
+    environment:
+      AMQP_HOST: "${AMQP_HOST}"
+      AMQP_PORT: "${AMQP_PORT}"
+      AMQP_USER: "${AMQP_USER}"
+      AMQP_PASS: "${AMQP_PASS}"
+  video_processor:
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    build:
+      context: ./services/video_processor
+    volumes:
+      - "./services/video_processor/src/:/app/" 
+      - "./shared/:/app/shared/"
+      - "upload_bucket:/files/uploaded"
+      - "processed_bucket:/files/processed" 
+  caddy:
+    image: caddy
+    volumes:
+      - "./services/caddy/Caddyfile:/etc/caddy/Caddyfile"
+      - "./services/caddy/static/:/srv/"
+    ports:
+      - 80:80
+      - 443:443
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 2s
+      retries: 3
+volumes:
+  upload_bucket:
+    driver: 
+  processed_bucket:
+      
+    
