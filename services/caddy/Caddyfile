@@ -1,14 +1,15 @@
 localhost {
     root * /srv
-    templates
-    file_server browse
+    
+    rewrite /user/* /user/index.php?{query}
     php_fastcgi /user/* user_dashboard:9000 {
         root /app
-        index index.php
+        try_files {path}/index.php
     }
+    rewrite /auth/* /auth/index.php?{query}
     php_fastcgi /auth/* auth:9000 {
         root /app
-        index index.php
+        try_files {path}/index.php        
     }
 }
 

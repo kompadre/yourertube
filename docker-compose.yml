@@ -11,13 +11,14 @@ services:
       context: ./services/user_dashboard
     volumes:
       - "./services/user_dashboard/src/:/app/user"
-      - "./common/:/app/common/"
+      - "./common/:/app/common/:ro"
       - "./volumes/media:/media/"
     environment:
       AMQP_HOST: "${AMQP_HOST}"
       AMQP_PORT: "${AMQP_PORT}"
       AMQP_USER: "${AMQP_USER}"
       AMQP_PASS: "${AMQP_PASS}"
+      JWT_SECRET: "${JWT_SECRET}"
   auth:
     build:
       context: ./services/auth
@@ -25,7 +26,9 @@ services:
       - caddy
     volumes:
       - "./services/auth/src/:/app/auth"
-      - "./common/:/app/common/"
+      - "./common/:/app/common/:ro"
+    environment:
+      JWT_SECRET: "${JWT_SECRET}"
   video_processor:
     depends_on:
       rabbit:
