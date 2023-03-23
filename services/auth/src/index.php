@@ -1,15 +1,42 @@
 <?php
-require_once __DIR__ . '/../common/vendor/autoload.php';
-use Firebase\JWT\JWT;
+require_once __DIR__ . '/common/vendor/autoload.php';
 
 $key = getenv('JWT_SECRET');
-$payload = [
-    'iss' => 'http://' . $_SERVER['HTTP_HOST'],
-    'iat' => time(),
-    'exp' => time()+86400,
-    'user_id' => 1
-];
+$auth = new \Auth\Auth(new \Auth\JwtAuthProvider($key));
+$status = 'ok';
+$error = '';
+$result = ['status' => 'ok', 'error' => ''];
 
-$jwt = JWT::encode($payload, $key, 'HS256');
-setcookie('token', $jwt, time()+86400, '/', $_SERVER['HTTP_HOST'], true);
-header('Location: /user/');
+$loginAction = function () use ($auth, $result) {
+    $post = json_decode(file_get_contents('php://input'), true);
+    if (empty($post)) {
+        return ['status' => 'ko', 'error' => 'wrong input'];
+    }
+
+    if (!isset($post['user']) || !isset($post['pass']) || !($post['user'] == 'admin' && $post['pass'] == 'admin')) {
+        $result['error'] = 'wrong credentials';
+        $result['status'] = 'ko';
+    } else {
+        $auth->store(['user_id' => 'admin']);
+    }
+    return $result;
+};
+
+$logoutAction = function() use ($auth, $result) {
+    $auth->delete();
+    return $result;
+};
+
+$checkAction = function() use ($auth, $result) {
+    $result['result'] = $auth->retrieve();
+    return $result;
+};
+
+$result = match ($_SERVER['REQUEST_URI']) {
+    '/auth/login' => $loginAction(),
+    '/auth/logout' => $logoutAction(),
+    '/auth/check' => $checkAction(),
+    default => ['status' => 'ko', 'error' => 'not found'],
+};
+header('Content-type: application/json', true);
+echo json_encode($result);

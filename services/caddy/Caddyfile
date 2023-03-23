@@ -1,15 +1,25 @@
-localhost {
-    root * /srv
-    
-    rewrite /user/* /user/index.php?{query}
-    php_fastcgi /user/* user_dashboard:9000 {
-        root /app
-        try_files {path}/index.php
+localhost {    
+    handle_path /repo/* {
+        rewrite /* /index.php?{query}
+        php_fastcgi /index.php video_repository:9000 {
+            root /app
+        }
     }
-    rewrite /auth/* /auth/index.php?{query}
-    php_fastcgi /auth/* auth:9000 {
-        root /app
-        try_files {path}/index.php        
+
+    handle_path /auth/* {
+        rewrite /* /index.php?{query} 
+        php_fastcgi /index.php auth:9000 {
+            root /app
+        }
+    }
+
+    handle /app* {
+        reverse_proxy /app* front:5173
+    }
+
+
+    handle /* {
+        root * /srv
+        file_server
     }
 }
-

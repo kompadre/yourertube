@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./app/favicon.png" />
+		<meta name="viewport" content="width=device-width" />
+		
+	</head>
+	<body data-sveltekit-preload-data="hover" style="background-color: aquamarine">
+		<div style="display: contents">
+
+
+<nav><a href="/app/">Home</a>
+    <a href="/app/about">About</a>
+    <a href="/app/settings">Settings</a>
+    Login:
+    <label>Email
+        <input name="email" type="email" value=""></label>
+    <label>Password
+        <input name="password" type="password" value=""></label>
+    <button>Log in</button></nav>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="/app/about">about</a></p>
+<img alt="woman" src="/app/pic.jpg">
+
+
+			
+			<script>
+				{
+					__sveltekit_1hk51tj = {
+						env: {},
+						assets: "/app",
+						base: new URL("./app", location).pathname,
+						element: document.currentScript.parentElement
+					};
+
+					const data = [null,null];
+
+					Promise.all([
+						import("./app/_app/immutable/entry/start.e5b826ac.js"),
+						import("./app/_app/immutable/entry/app.23113740.js")
+					]).then(([kit, app]) => {
+						kit.start(app, __sveltekit_1hk51tj.element, {
+							node_ids: [0, 2],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>

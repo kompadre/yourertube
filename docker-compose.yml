@@ -1,18 +1,18 @@
 version: '3'
 
 services:
-  user_dashboard:
+  video_repository:
     depends_on:
       rabbit:
         condition: service_healthy
       caddy:
         condition: service_started
     build:
-      context: ./services/user_dashboard
+      context: ./services/video_repository
     volumes:
-      - "./services/user_dashboard/src/:/app/user"
+      - "./services/video_repository/src/:/app"
       - "./common/:/app/common/:ro"
-      - "./volumes/media:/media/"
+      - "./volumes/media/:/media/"
     environment:
       AMQP_HOST: "${AMQP_HOST}"
       AMQP_PORT: "${AMQP_PORT}"
@@ -25,7 +25,7 @@ services:
     depends_on:
       - caddy
     volumes:
-      - "./services/auth/src/:/app/auth"
+      - "./services/auth/src/:/app/"
       - "./common/:/app/common/:ro"
     environment:
       JWT_SECRET: "${JWT_SECRET}"
@@ -39,14 +39,21 @@ services:
       - "./services/video_processor/src/:/app/" 
       - "./common/:/app/common/"
       - "./volumes/media:/media/"
+  front:
+    build:
+      context: "./services/front/"
+    volumes:
+      - "./services/front/:/app/"
   caddy:
     image: caddy
     volumes:
       - "./services/caddy/Caddyfile:/etc/caddy/Caddyfile"
-      - "./services/caddy/static/:/srv/"
+      - "./static/:/srv/"
     ports:
       - 80:80
       - 443:443
+    depends_on:
+      - front
   rabbit:
     image: rabbitmq:3-management
     ports:
