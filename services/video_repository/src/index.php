@@ -8,13 +8,25 @@ $error = '';
 $result = ['status' => 'ok', 'error' => ''];
 $user_id = $auth->retrieve()?->user_id ?? null;
 $uploadAction = function() use ($user_id) {
+    $tmpname = $_FILES['file']['tmp_name'];
+    $extension = match(mime_content_type($tmpname)) {
+        'image/jpeg', 'image/jpg' => 'jpg',
+        'image/png'  => 'png',
+        'image/gif'  => 'gif',
+        default => null,
+    };
+
+    if ($extension === null) {
+        return ['status' => 'ko', 'error' => 'invalid file'];
+    }
+
     $user_id = preg_replace('/[^0-9a-z_]/', '', $user_id);
     $targetDir = '/media/uploaded/' . $user_id;
     if (!is_dir($targetDir)) {
         umask(0);
         mkdir($targetDir, 0777, true);
     }
-    $filename = sha1_file($_FILES['file']['tmp_name']);
+    $filename = sha1_file($_FILES['file']['tmp_name']) . '.' . $extension;
     move_uploaded_file($_FILES['file']['tmp_name'], $targetDir . '/' . $filename);
     $result['uploaded_filename'] = $user_id . '/' . $filename;
     return $result;

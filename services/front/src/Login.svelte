@@ -46,7 +46,13 @@
         $authenticated = !(res.result == false);
     });
 </script>
+<style lang="scss">
+    div.root {
+      margin-left: 10px;
+    }
+</style>
 
+<div class="root">
 Login:
 {#if !$authenticated}
     <label>
@@ -61,3 +67,4 @@ Login:
 {:else}
     <button on:click={() => logout()}>Log out</button>
 {/if}
+</div>

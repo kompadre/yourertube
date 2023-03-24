@@ -21,6 +21,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@sveltejs/adapter-node": "^1.2.3"
+		"@sveltejs/adapter-node": "^1.2.3",
+		"sass": "^1.60.0"
 	}
 }

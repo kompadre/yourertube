@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 
 services:
   video_repository:
@@ -9,6 +9,9 @@ services:
         condition: service_started
     build:
       context: ./services/video_repository
+      args:
+        USER_ID: ${USER_ID:-0}
+        GROUP_ID: ${GROUP_ID:-0}
     volumes:
       - "./services/video_repository/src/:/app"
       - "./common/:/app/common/:ro"
@@ -49,6 +52,7 @@ services:
     volumes:
       - "./services/caddy/Caddyfile:/etc/caddy/Caddyfile"
       - "./static/:/srv/"
+      - "./volumes/media/uploaded/:/uploaded/:ro"
     ports:
       - 80:80
       - 443:443

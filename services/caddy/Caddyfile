@@ -13,6 +13,11 @@ localhost {
         }
     }
 
+    handle /uploaded/* {
+        root * /uploaded
+        file_server
+    }
+
     handle /app* {
         reverse_proxy /app* front:5173
     }
