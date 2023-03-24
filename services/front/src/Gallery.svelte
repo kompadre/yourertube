@@ -7,6 +7,21 @@
         images = await res.json();
         loaded = true;
     });
+    async function removeImage(e) {
+        const target = e.target;
+        console.log(target);
+        const parent = target.parentElement;
+        console.log(parent);
+        const filename = parent.getAttribute('data-filename');
+        const res = await fetch('/repo/delete', {
+            method: 'POST',
+            body: JSON.stringify({ filename: filename })
+        })
+        const json = await res.json();
+        if (json.status == "ok") {
+            parent.remove();
+        }
+    }
 </script>
 <style lang="scss">
     div.gallery {
@@ -30,7 +45,9 @@
         Loading...
     {:else}
         {#each images.images as image}
-            <div class="image" style="background-image: url({image.replace('/media', '')})"></div>
+            <div data-filename="{image.replace('/media', '')}" class="image" style="background-image: url({image.replace('/media', '')})">
+                <button on:click={removeImage}>(x)</button>
+            </div>
         {/each}
     {/if}
 </div>

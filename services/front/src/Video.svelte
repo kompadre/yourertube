@@ -19,7 +19,10 @@
         });
         result = await (await upload).json();
         uploading = false;
-        $refreshGallery = Date.now();
+        if (refreshGallery) {
+            $refreshGallery = Date.now();
+        }
+
         uploadedImage = "/uploaded/" + result.uploaded_filename;
     }
 </script>
