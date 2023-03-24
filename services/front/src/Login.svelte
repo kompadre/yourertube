@@ -53,8 +53,8 @@
 </style>
 
 <div class="root">
-Login:
 {#if !$authenticated}
+    Login:
     <label>
         Email
         <input name="email" type="text" bind:value={user}>
@@ -65,6 +65,6 @@ Login:
     </label>
     <button on:click={() => login()}>Log in</button>
 {:else}
-    <button on:click={() => logout()}>Log out</button>
+    Logged in <button on:click={() => logout()}>Log out?</button>
 {/if}
 </div>
