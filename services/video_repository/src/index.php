@@ -7,20 +7,21 @@ $status = 'ok';
 $error = '';
 $result = ['status' => 'ok', 'error' => ''];
 $user_id = $auth->retrieve()?->user_id ?? null;
-$uploadAction = function() use ($user_id) {
+if ($user_id !== null)
+    $user_id = preg_replace('/[^0-9a-z_]/', '', $user_id);
+
+$uploadAction = function() use ($user_id, $result) {
     $tmpname = $_FILES['file']['tmp_name'];
     $extension = match(mime_content_type($tmpname)) {
         'image/jpeg', 'image/jpg' => 'jpg',
-        'image/png'  => 'png',
-        'image/gif'  => 'gif',
-        default => null,
+        'image/png'     => 'png',
+        'image/gif'     => 'gif',
+        default         => null,
     };
 
     if ($extension === null) {
         return ['status' => 'ko', 'error' => 'invalid file'];
     }
-
-    $user_id = preg_replace('/[^0-9a-z_]/', '', $user_id);
     $targetDir = '/media/uploaded/' . $user_id;
     if (!is_dir($targetDir)) {
         umask(0);
@@ -31,10 +32,17 @@ $uploadAction = function() use ($user_id) {
     $result['uploaded_filename'] = $user_id . '/' . $filename;
     return $result;
 };
+$galleryAction = function() use ($user_id, $result) {
+    $targetDir = '/media/uploaded/' . $user_id;
+    $images = glob($targetDir . '/*');
+    $result['images'] = $images;
+    return $result;
+};
 
 $result = match ($_SERVER['REQUEST_URI']) {
-    $user_id === null => ['status' => 'ko', 'error' => 'not authorised'],
+    empty($user_id) => ['status' => 'ko', 'error' => 'not authorised'],
     '/repo/upload' => $uploadAction(),
+    '/repo/gallery' => $galleryAction(),
     default => ['status' => 'ko', 'error' => 'not found'],
 };
 header('Content-type: application/json', true);
