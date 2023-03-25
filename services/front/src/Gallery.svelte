@@ -94,7 +94,7 @@
       grid-template-rows: 1fr;
       grid-gap: 2px;
       width: 75vw;
-      > div.image {
+      > div.image, div.video {
         aspect-ratio: 1;
         background-size: cover;
         background-repeat: no-repeat;
@@ -104,40 +104,20 @@
           margin-top: 5px;
           margin-right: 5px;
           float: right;
-        }
-      }
-      > div.video {
-        aspect-ratio: 1;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        > video {
-          width: 65%;
-          aspect-ratio: 1;
-          margin: 0;
-          border: 0;
-        }
-        > button {
-          position: absolute;
-          right: 5px;
-          top: 5px;
-        }
-      }
-      > div.image > button, div.video > button {
-        background-color: rgba(0, 0, 0, 0.3);
-        color: white;
-        font-weight: bold;
-        border: 0px;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        padding:0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        &:hover {
-          background-color: rgba(127, 127, 127, 0.3);
+          background-color: rgba(0, 0, 0, 0.3);
+          color: white;
+          font-weight: bold;
+          border: 0px;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          padding:0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          &:hover {
+            background-color: rgba(127, 127, 127, 0.3);
+          }
         }
       }
     }
