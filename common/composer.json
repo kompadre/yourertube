@@ -3,6 +3,7 @@
     	"psr-4": { "": "src/" }
     },
     "require": {
-        "firebase/php-jwt": "^6.4"
+        "firebase/php-jwt": "^6.4",
+      "ext-amqp": "*"
     }
 }

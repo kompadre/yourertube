@@ -3,14 +3,18 @@
     import { base } from '$app/paths';
     import {writable} from "svelte/store";
     import {setContext} from "svelte";
-    import Video from "../Video.svelte";
+    import Video from "../Upload.svelte";
     let result = '';
     const authenticated = writable(false);
     setContext('authenticated', authenticated);
 </script>
 <style lang="scss">
+    body {
+      font-family: Roboto;
+    }
     nav {
         display: flex;
+        padding-top: 10px;
         >* {
           margin-left: 10px;
         }
@@ -21,7 +25,6 @@
       align-items: center;
       justify-items: center;
       justify-content: center;
-
       flex-direction: column;
     }
 </style>
@@ -34,5 +37,9 @@
     <Login />
 </nav>
 <div id="main">
+{#if $authenticated}
 <slot></slot>
+{:else}
+    You have to be logged in.
+{/if}
 </div>

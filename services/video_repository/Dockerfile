@@ -18,6 +18,7 @@ RUN apt-get update && \
 
 RUN pecl install amqp && docker-php-ext-enable amqp
 
+ADD ./conf/max_upload.ini /usr/local/etc/php/conf.d/max_upload.ini
 
 WORKDIR /app
 

@@ -1,7 +1,7 @@
 <script>
     import Gallery from "../../Gallery.svelte";
     import {setContext, getContext} from "svelte";
-    import Video from "../../Video.svelte";
+    import Upload from "../../Upload.svelte";
     import {writable} from "svelte/store";
     const authenticated = getContext('authenticated');
     const refreshGallery = writable(Date.now())
@@ -13,5 +13,5 @@
     {#key $refreshGallery}
     <Gallery />
     {/key}
-    <Video />
+    <Upload />
 {/if}

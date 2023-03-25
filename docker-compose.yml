@@ -42,6 +42,12 @@ services:
       - "./services/video_processor/src/:/app/" 
       - "./common/:/app/common/"
       - "./volumes/media:/media/"
+    environment:
+      AMQP_HOST: "${AMQP_HOST}"
+      AMQP_PORT: "${AMQP_PORT}"
+      AMQP_USER: "${AMQP_USER}"
+      AMQP_PASS: "${AMQP_PASS}"
+      JWT_SECRET: "${JWT_SECRET}"
   front:
     build:
       context: "./services/front/"

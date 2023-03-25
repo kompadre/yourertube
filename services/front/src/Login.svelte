@@ -48,7 +48,8 @@
 </script>
 <style lang="scss">
     div.root {
-      margin-left: 10px;
+      margin-left: auto;
+      margin-right: 10px;
     }
 </style>
 

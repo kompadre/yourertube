@@ -7,4 +7,4 @@ RUN apt-get update && \
 RUN pecl install amqp && docker-php-ext-enable amqp
 
 WORKDIR /app
-CMD ["php", "/app/consumer.php"]
+CMD ["php", "/app/worker.php"]

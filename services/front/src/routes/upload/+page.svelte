@@ -1,5 +1,5 @@
 <script>
-import Video from "../../Video.svelte";
+import Video from "../../Upload.svelte";
 import {getContext} from "svelte";
 
 const authenticated = getContext('authenticated');
