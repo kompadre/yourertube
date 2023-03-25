@@ -8,7 +8,7 @@ $q->consumeTasks(function(AMQPEnvelope $message, AMQPQueue $q) {
 	if (file_exists($data['filename'])) {
 		list('basename' => $basename, 'dirname' => $dirname) = pathinfo($data['filename']);
 		$thumbFile = $dirname . '/' . $basename . '.thumb.png';
-		exec("ffmpeg -i ". escapeshellarg($data['filename']) ." -vframes 1 " . escapeshellarg($thumbFile));
+		exec("ffmpeg -hide_banner -loglevel error -i ". escapeshellarg($data['filename']) ." -vframes 1 " . escapeshellarg($thumbFile));
 	}
 	$q->ack($message->getDeliveryTag());
 });

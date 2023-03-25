@@ -1,8 +1,16 @@
 # Urrtube (working title)
 Work very much in progress.
-> cp .env.example .env
-
-> docker-compose up  
+### Setup
+```shell
+cp .env.example .env
+# Install php dependencies
+cd common && composer install && cd ..
+# Install node dependencies
+cd services/front && npm install && cd ..
+# Start everything up
+docker-compose up
+# ... and the application should be running on https://localhost 
+```  
 
 ### Disclaimer
-Nobody is perfect.
+Testing a monorepo configuration that is not a pain to work with.  
