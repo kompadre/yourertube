@@ -107,7 +107,7 @@
           background-color: rgba(0, 0, 0, 0.3);
           color: white;
           font-weight: bold;
-          border: 0px;
+          border: 0;
           border-radius: 50%;
           width: 20px;
           height: 20px;

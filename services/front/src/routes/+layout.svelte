@@ -9,18 +9,25 @@
     setContext('authenticated', authenticated);
 </script>
 <style lang="scss">
+    :root {
+      --header-height: 30px;
+    }
     body {
       font-family: Roboto;
     }
     nav {
         display: flex;
         padding-top: 10px;
-        >* {
+        height: calc( var(--header-height) - 10px );
+        >a {
           margin-left: 10px;
+          @media (max-width: 420px) {
+            display: none;
+          }
         }
     }
     div#main {
-      height: calc( 100vh - 21px );
+      height: calc( 100vh - var(--header-height) );
       display: flex;
       align-items: center;
       justify-items: center;

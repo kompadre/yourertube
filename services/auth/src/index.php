@@ -38,5 +38,11 @@ $result = match ($_SERVER['REQUEST_URI']) {
     '/auth/check' => $checkAction(),
     default => ['status' => 'ko', 'error' => 'not found'],
 };
+
 header('Content-type: application/json', true);
+if (isset($result['status_code'])) {
+	http_response_code($result['status_code']);
+	unset($result['status_code']);
+}
 echo json_encode($result);
+exit();

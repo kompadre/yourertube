@@ -28,8 +28,9 @@ class Queue
 			];
 		}
 		$this->connection = new AMQPConnection($connectionConfig);
+
 		try {
-			$this->connection->connect();
+			$this->connect();
 			//Create and declare channel
 			$this->channel = new AMQPChannel($this->connection);
 			$this->channel->setPrefetchCount(1);
@@ -43,6 +44,17 @@ class Queue
 		$this->connected = true;
 	}
 
+	public function connect(int $retries=3) {
+		for(;$retries>0;$retries--) {
+			try {
+				$success = $this->connection->connect();
+			} catch (\AMQPConnectionException $e) {
+				$success = false;
+			}
+			if ($success) break;
+			sleep(10);
+		}
+	}
 
 	function __destruct()
 	{
