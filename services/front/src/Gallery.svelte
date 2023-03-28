@@ -15,15 +15,13 @@
     });
 
     async function removeImage(e) {
-        e.stopPropagation()
-        e.preventDefault()
         const target = e.target;
         console.log(target);
         const parent = target.parentElement;
         console.log(parent);
         const filename = parent.getAttribute('data-filename');
-        const res = await fetch('/repo/delete', {
-            method: 'POST',
+        const res = await fetch('/repo/item', {
+            method: 'DELETE',
             body: JSON.stringify({filename: filename})
         })
         const json = await res.json();
@@ -43,7 +41,7 @@
                     <div on:click={() => (modalImageSource = image.replace('/media', ''), showModal = true, modalShowingVideo = false)}
                          data-filename="{image.replace('/media', '')}" class="image"
                          style="background-image: url({image.replace('/media', '')})">
-                        <button on:click={removeImage}>&times;</button>
+                        <button on:click|once|stopPropagation={removeImage}>&times;</button>
                     </div>
                 {/each}
             </div>
@@ -56,7 +54,7 @@
                          data-filename="{video.path.replace('/media', '')}" class="video"
                          style="background-image: url({video.thumb.replace('/media', '')})"
                     >
-                        <button on:click={removeImage}>&times;</button>
+                        <button on:click|once|stopPropagation={removeImage}>&times;</button>
                     </div>
                 {/each}
             </div>

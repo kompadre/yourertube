@@ -7,7 +7,7 @@ $status = 'ok';
 $error = '';
 $result = ['status' => 'ok', 'error' => ''];
 $user_id = $auth->retrieve()?->user_id ?? null;
-$uri = $_SERVER['REQUEST_URI'];
+$uri = strtolower($_SERVER['REQUEST_METHOD']) . ':' . $_SERVER['REQUEST_URI'];
 if ($user_id)
 	$user_id = preg_replace('/[^0-9a-z_]/', '', $user_id);
 if (!$user_id)
@@ -34,7 +34,7 @@ $uploadAction = function() use ($user_id, $result) {
 		umask(0);
 		mkdir($targetDir, 0777, true);
 	}
-	$filename = sha1_file($_FILES['file']['tmp_name']) . '.' . $extension;
+	$filename = time() . '_' . sha1_file($_FILES['file']['tmp_name']) . '.' . $extension;
 	$targetFile = $targetDir . '/' . $filename;
 	move_uploaded_file($_FILES['file']['tmp_name'], $targetFile);
 	$result['uploaded_filename'] = $user_id . '/' . $filename;
@@ -74,14 +74,22 @@ $deleteAction = function() use ($user_id, $result) {
 	return $result;
 };
 
-$result = match ($uri) {
-	'/repo/upload' => $uploadAction(),
-	'/repo/gallery' => $galleryAction(),
-	'/repo/delete' => $deleteAction(),
-	'/repo/info' => (function() { phpinfo(); die(); })(),
+$routes = [
+	'post:/repo/upload' => $uploadAction,
+	'get:/repo/gallery' => $galleryAction,
+	'delete:/repo/item' => $deleteAction,
+	'get:/repo/info' => function() { phpinfo(); die(); },
 	'error:forbidden' => ['status' => 'ko', 'error' => 'forbidden', 'status_code' => 403],
-	default => ['status' => 'ko', 'error' => 'not found', 'status_code' => 404],
-};
+	'_default' => ['status' => 'ko', 'error' => 'not found', 'status_code' => 404],
+];
+
+$matches = [];
+foreach($routes as $template => $response) {
+	if ($template === '_default' || preg_match('#^' . $template . '$#', $uri, $matches)) {
+			$result = is_callable($response) ? $response($matches) : $response;
+			if ($result) break;
+	}
+}
 
 header('Content-type: application/json', true);
 if (isset($result['status_code'])) {
